@@ -3,6 +3,7 @@ package memberSearch.memberSearch.service;
 import lombok.RequiredArgsConstructor;
 import memberSearch.memberSearch.domain.Member;
 import memberSearch.memberSearch.repository.MemberRepository;
+import memberSearch.memberSearch.repository.MemberSearchCondition;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class MemberService {
         return findMember;
     }
 
-    public List<Member> findAllMember(){
-        List<Member> allMembers = memberRepository.findAll();
+    public List<Member> findAllMember(MemberSearchCondition cond){
+        List<Member> allMembers = memberRepository.findAll(cond);
         return allMembers;
     }
 

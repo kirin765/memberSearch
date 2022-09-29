@@ -85,7 +85,7 @@ public class ViewController {
                        @PathParam("password") String password, Model model){
 
         if(StringUtils.hasText(id)){
-            model.addAttribute("")
+            model.addAttribute("");
         }
         log.info("id={}, name={}, password={}", id, name, password);
 

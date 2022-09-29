@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import memberSearch.memberSearch.domain.Member;
+import memberSearch.memberSearch.repository.MemberSearchCondition;
 import memberSearch.memberSearch.service.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -34,8 +36,11 @@ public class MemberController {
     }
 
     @GetMapping("")
-    public List<Member> findAll(){
-        List<Member> memberList = memberService.findAllMember();
+    public List<Member> findAll(@PathParam("id") String id,
+                                @PathParam("name") String name,
+                                @PathParam("password") String password){
+        log.info("id={}, name={}, password={}", id, name, password);
+        List<Member> memberList = memberService.findAllMember(new MemberSearchCondition(id, name, password));
         return memberList;
     }
 

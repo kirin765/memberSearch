@@ -8,5 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberSearchCondition {
-
+    private String id;
+    private String name;
+    private String password;
 }

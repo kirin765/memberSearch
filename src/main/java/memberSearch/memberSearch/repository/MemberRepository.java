@@ -8,6 +8,6 @@ public interface MemberRepository {
 
     Member save(Member member);
     Member findById(String memberId);
-    List<Member> findAll();
+    List<Member> findAll(MemberSearchCondition cond);
     void delete(String memberId);
 }

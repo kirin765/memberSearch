@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import memberSearch.memberSearch.Connection.DBConnectionUtil;
 import memberSearch.memberSearch.domain.Member;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -99,8 +100,41 @@ public class MemberRepositoryImpl implements MemberRepository{
     }
 
     @Override
-    public List<Member> findAll() {
+    public List<Member> findAll(MemberSearchCondition cond) {
         String sql = "select * from member";
+
+        boolean flag = false;
+        List<String> params = new ArrayList<>();
+
+        if(StringUtils.hasText(cond.getId())){
+            sql += " where member_id = ?";
+            params.add(cond.getId());
+            flag = true;
+        }
+
+        if(StringUtils.hasText(cond.getName())){
+            if(flag){
+                sql += " and";
+            }else{
+                sql += " where";
+            }
+
+            sql += " name like concat('%', ?, '%')";
+            params.add(cond.getName());
+            flag = true;
+        }
+
+        if(StringUtils.hasText(cond.getPassword())){
+            if(flag){
+                sql += " and";
+            }else{
+                sql += " where";
+            }
+
+            sql += " password like concat('%', ?, '%')";
+            params.add(cond.getPassword());
+            flag = true;
+        }
 
         List<Member> memberList = new ArrayList<>();
         Connection con = null;
@@ -110,6 +144,11 @@ public class MemberRepositoryImpl implements MemberRepository{
         try {
             con = DBConnectionUtil.getConnection();
             pstmt = con.prepareStatement(sql);
+
+            for(int i=1;i<=params.size();i++){
+                pstmt.setString(i, params.get(i-1));
+            }
+
             rs = pstmt.executeQuery();
 
             while(rs.next()){
