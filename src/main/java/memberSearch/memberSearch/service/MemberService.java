@@ -28,8 +28,7 @@ public class MemberService {
         return allMembers;
     }
 
-    Member deleteMember(String memberId){
-        Member deletedMember = memberRepository.delete(memberId);
-        return deletedMember;
+    public void deleteMember(String memberId){
+        memberRepository.delete(memberId);
     }
 }

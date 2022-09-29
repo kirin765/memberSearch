@@ -9,5 +9,5 @@ public interface MemberRepository {
     Member save(Member member);
     Member findById(String memberId);
     List<Member> findAll();
-    Member delete(String memberId);
+    void delete(String memberId);
 }
