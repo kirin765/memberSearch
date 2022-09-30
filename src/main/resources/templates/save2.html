@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>save member</h2>
+<form action="member.html" th:action="@{/save2}" th:object="${member}" method="post">
+    <div th:if="${#fields.hasGlobalErrors()}">
+        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">global error message</p>
+    </div>
+    <div>
+        <h2>id</h2>
+        <input type="text" id="id" th:field="*{id}">
+        <div th:errors="*{id}">id 오류</div>
+    </div>
+    <div>
+        <h2>name</h2>
+        <input type="text" id="name" th:field="*{name}">
+        <div th:errors="*{name}">name 오류</div>
+    </div>
+    <div>
+        <h2>password</h2>
+        <input type="text" id="password" th:field="*{password}">
+        <div th:errors="*{password}">password 오류</div>
+    </div>
+    <div>
+        <button type="submit">상품 등록</button>
+    </div>
+</form>
+</body>
+</html>
