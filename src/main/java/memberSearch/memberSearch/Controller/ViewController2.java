@@ -6,6 +6,7 @@ import memberSearch.memberSearch.domain.Member;
 import memberSearch.memberSearch.repository.MemberSearchCondition;
 import memberSearch.memberSearch.service.MemberService;
 import memberSearch.memberSearch.validator.MemberValidator;
+import memberSearch.memberSearch.validator.SaveCheck;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -54,7 +55,7 @@ public class ViewController2 {
     }
 
     @PostMapping("/save8")
-    public String saveMember8(@ModelAttribute @Validated Member member, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model){
+    public String saveMember8(@ModelAttribute @Validated(SaveCheck.class) Member member, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model){
 
         if(bindingResult.hasErrors()){
             log.info("errors={} ", bindingResult);

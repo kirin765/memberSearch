@@ -19,6 +19,11 @@ public class MemberService {
         return member;
     }
 
+    public Member updateMember(Member member){
+        memberRepository.update(member);
+        return member;
+    }
+
     public Member findMember(String memberId){
         Member findMember = memberRepository.findById(memberId);
         return findMember;

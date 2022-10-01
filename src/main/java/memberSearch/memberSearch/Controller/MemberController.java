@@ -28,6 +28,13 @@ public class MemberController {
         return member;
     }
 
+    @PutMapping("/{memberId}")
+    public Member updateMember(@RequestBody Member member){
+        memberService.updateMember(member);
+        log.info("updateMember: {}", member);
+        return member;
+    }
+
     @GetMapping("/{memberId}")
     public Member getMember(@PathVariable String memberId){
         Member findMember = memberService.findMember(memberId);

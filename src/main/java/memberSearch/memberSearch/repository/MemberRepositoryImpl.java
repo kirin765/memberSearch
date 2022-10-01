@@ -49,6 +49,43 @@ public class MemberRepositoryImpl implements MemberRepository{
         }
     }
 
+
+    @Override
+    public Member update(Member member) {
+        String sql = "update member set member_id = ?, name = ?, password = ? where member_id = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try{
+            con =DBConnectionUtil.getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, member.getId());
+            pstmt.setString(2, member.getName());
+            pstmt.setString(3, member.getPassword());
+            pstmt.setString(4, member.getId());
+            int resultSize = pstmt.executeUpdate();
+            log.info("update resultSize={}", resultSize);
+            return member;
+
+        }catch (SQLException e){
+            log.error("db error", e);
+            return null;
+        }finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                log.info("error", e);
+            }
+
+            try {
+                con.close();
+            } catch (SQLException e) {
+                log.info("error", e);
+            }
+        }
+    }
+
     @Override
     public Member findById(String memberId) {
         String sql = "select * from member where member_id = ?";
@@ -214,4 +251,5 @@ public class MemberRepositoryImpl implements MemberRepository{
             }
         }
     }
+
 }

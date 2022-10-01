@@ -6,6 +6,7 @@ import memberSearch.memberSearch.domain.Member;
 import memberSearch.memberSearch.repository.MemberSearchCondition;
 import memberSearch.memberSearch.service.MemberService;
 import memberSearch.memberSearch.validator.MemberValidator;
+import memberSearch.memberSearch.validator.UpdateCheck;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -33,10 +34,10 @@ public class ViewController {
     private final MemberService memberService;
     private final MemberValidator memberValidator;
 
-    @InitBinder
-    public void init(WebDataBinder dataBinder){
-        dataBinder.addValidators(memberValidator);
-    }
+//    @InitBinder
+//    public void init(WebDataBinder dataBinder){
+//        dataBinder.addValidators(memberValidator);
+//    }
 
     @GetMapping("")
     public String home(Model model){
@@ -52,6 +53,29 @@ public class ViewController {
     public String save(Model model){
         model.addAttribute("member", new Member());
         return "save";
+    }
+
+    @GetMapping("/edit/{memberId}")
+    public String edit(@PathVariable("memberId") String id, Model model){
+        Member findMember = memberService.findMember(id);
+        log.info("id={}", id);
+        model.addAttribute("member", findMember);
+        return "edit";
+    }
+
+    @PostMapping("/edit")
+    public String editMember(@ModelAttribute @Validated(UpdateCheck.class) Member member, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model){
+
+        redirectAttributes.addAttribute("memberId", member.getId());
+
+        if(bindingResult.hasErrors()){
+            log.info("error={}", bindingResult);
+            return "redirect:/find";
+        }
+
+        memberService.updateMember(member);
+
+        return "redirect:/spec/{memberId}";
     }
 
     @GetMapping("/save2")

@@ -10,4 +10,5 @@ public interface MemberRepository {
     Member findById(String memberId);
     List<Member> findAll(MemberSearchCondition cond);
     void delete(String memberId);
+    Member update(Member member);
 }

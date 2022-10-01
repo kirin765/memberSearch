@@ -30,6 +30,19 @@ class MemberRepositoryImplTest {
     void saveTest(){
         Member newMember = new Member("1", "member1", "1234");
         memberRepository.save(newMember);
+
+    }
+
+    @Test
+    void updateTest(){
+        Member newMember = new Member("1", "member1", "1234");
+        memberRepository.save(newMember);
+
+        Member updatedMember = new Member("1", "member11", "11");
+        memberRepository.update(updatedMember);
+
+        Member findMember = memberRepository.findById("1");
+        Assertions.assertThat(updatedMember).isEqualTo(findMember);
     }
 
     @Test

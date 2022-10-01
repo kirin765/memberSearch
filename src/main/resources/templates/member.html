@@ -13,6 +13,7 @@
     <div th:text="${member.name}"></div>
     <h2>password</h2>
     <div th:text="${member.password}"></div>
+    <a th:href="@{/edit/{id}(id=${member.id})}">edit</a>
 </div>
 </body>
 </html>
