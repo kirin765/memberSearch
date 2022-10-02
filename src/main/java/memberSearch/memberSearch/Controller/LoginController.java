@@ -12,16 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +49,12 @@ public class LoginController {
 
     @GetMapping("/session2")
     public String loginSessionPage2(Model model){
+        model.addAttribute("loginFormDto", new LoginFormDto());
+        return "loginSessionV";
+    }
+
+    @GetMapping("/session3")
+    public String loginSessionPage3(Model model){
         model.addAttribute("loginFormDto", new LoginFormDto());
         return "loginSessionV";
     }
@@ -121,5 +125,29 @@ public class LoginController {
         session.setAttribute("loginMember", loginMember);
 
         return "redirect:/loginSessionHome2";
+    }
+
+    @PostMapping("/session3")
+    public String loginSession3(@ModelAttribute @Valid LoginFormDto loginFormDto,
+                                BindingResult bindingResult,
+                                @PathParam("redirectURL") String redirectURL,
+                                HttpServletRequest request){
+        Member loginMember = null;
+        log.info("loginSession3 requestURL = {}", redirectURL);
+        try {
+            loginMember = loginService.login(loginFormDto.getId(), loginFormDto.getPassword());
+        }catch (NoSuchElementException e){
+            bindingResult.reject("login", "login fail");
+        }
+
+        if(bindingResult.hasErrors()){
+            log.error("error={}", bindingResult);
+            return "loginSessionV";
+        }
+
+        HttpSession session = request.getSession();
+        session.setAttribute("loginMember", loginMember);
+
+        return "redirect:" + redirectURL;
     }
 }
