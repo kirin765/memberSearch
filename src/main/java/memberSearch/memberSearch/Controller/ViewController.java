@@ -2,6 +2,7 @@ package memberSearch.memberSearch.Controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import memberSearch.memberSearch.argumentresolver.Login;
 import memberSearch.memberSearch.domain.Member;
 import memberSearch.memberSearch.domain.MySession;
 import memberSearch.memberSearch.repository.MemberSearchCondition;
@@ -157,6 +158,24 @@ public class ViewController {
 
     @GetMapping("/loginSessionHome3")
     public String loginSessionHome3(@SessionAttribute(name = "loginMember", required = false) Member member, Model model){
+        List<String> links = new ArrayList<>();
+        links.add("/save");
+        links.add("/spec");
+        links.add("/find");
+        model.addAttribute("links", links);
+
+        if(member==null){
+            return "home";
+        }
+
+        model.addAttribute("loginmember", member);
+        log.info("member={}", member);
+
+        return "loginhome";
+    }
+
+    @GetMapping("/loginSessionHome4")
+    public String loginSessionHome4(@Login Member member, Model model){
         List<String> links = new ArrayList<>();
         links.add("/save");
         links.add("/spec");
