@@ -155,6 +155,24 @@ public class ViewController {
         return "loginhome";
     }
 
+    @GetMapping("/loginSessionHome3")
+    public String loginSessionHome3(@SessionAttribute(name = "loginMember", required = false) Member member, Model model){
+        List<String> links = new ArrayList<>();
+        links.add("/save");
+        links.add("/spec");
+        links.add("/find");
+        model.addAttribute("links", links);
+
+        if(member==null){
+            return "home";
+        }
+
+        model.addAttribute("loginmember", member);
+        log.info("member={}", member);
+
+        return "loginhome";
+    }
+
 
     @GetMapping("/save")
     public String save(Model model){
