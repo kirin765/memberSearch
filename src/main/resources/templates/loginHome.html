@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>home</h2>
+<th:block th:each="url: ${links}">
+    <div>
+        <a th:text="${url}" th:href="${url}"></a>
+    </div>
+</th:block>
+</body>
+</html>
