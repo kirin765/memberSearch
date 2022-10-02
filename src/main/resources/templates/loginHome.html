@@ -6,6 +6,18 @@
 </head>
 <body>
 <h2>home</h2>
+
+<div th:if="${loginmember}">
+    <h2>로그인 중</h2>
+    <div>
+        <h2>ID</h2>
+        <div th:text="${loginmember.id}"></div>
+    </div>
+    <div>
+        <h2>이름</h2>
+        <div th:text="${loginmember.name}"></div>
+    </div>
+</div>
 <th:block th:each="url: ${links}">
     <div>
         <a th:text="${url}" th:href="${url}"></a>

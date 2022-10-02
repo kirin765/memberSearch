@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import memberSearch.memberSearch.domain.Member;
 import memberSearch.memberSearch.repository.MemberSearchCondition;
 import memberSearch.memberSearch.service.MemberService;
+import memberSearch.memberSearch.service.SessionService;
 import memberSearch.memberSearch.validator.MemberValidator;
 import memberSearch.memberSearch.validator.UpdateCheck;
 import org.springframework.stereotype.Controller;
@@ -19,11 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -33,6 +33,7 @@ public class ViewController {
 
     private final MemberService memberService;
     private final MemberValidator memberValidator;
+    private final SessionService sessionService;
 
 //    @InitBinder
 //    public void init(WebDataBinder dataBinder){
@@ -47,6 +48,83 @@ public class ViewController {
         links.add("/find");
         model.addAttribute("links", links);
         return "home";
+    }
+
+    @GetMapping("/loginhome")
+    public String loginHome(@CookieValue(name="id", required = false) String id, Model model){
+        List<String> links = new ArrayList<>();
+        links.add("/save");
+        links.add("/spec");
+        links.add("/find");
+        model.addAttribute("links", links);
+
+        if(id==null){
+            return "home";
+        }
+
+        Member loginMember = null;
+
+        try {
+            loginMember = memberService.findMember(id);
+        }catch (NoSuchElementException e){
+            log.error("no such member");
+            return "home";
+        }
+
+        model.addAttribute("loginmember", loginMember);
+
+        return "loginhome";
+    }
+
+    @GetMapping("/loginSessionHome")
+    public String loginSessionHome(HttpServletRequest request, Model model){
+        List<String> links = new ArrayList<>();
+        links.add("/save");
+        links.add("/spec");
+        links.add("/find");
+        model.addAttribute("links", links);
+
+        Cookie[] cookies = request.getCookies();
+
+        log.info("cookies={}", cookies);
+
+        if(cookies == null)
+            return "home";
+
+        Cookie sessionCookie = Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals("mySessionId"))
+                .findAny()
+                .orElse(null);
+
+        if(sessionCookie==null)
+            return "home";
+
+        String mySessionId = sessionCookie.getValue();
+
+        if(mySessionId==null){
+            return "home";
+        }
+
+        Member loginMember = null;
+        String id = sessionService.getId(mySessionId);
+
+        if(id==null){
+            log.info("세션 만료");
+            return "home";
+        }
+
+        try {
+            loginMember = memberService.findMember(id);
+        }catch (NoSuchElementException e){
+            log.error("no such member");
+            return "home";
+        }
+
+        model.addAttribute("loginmember", loginMember);
+
+        log.info("mySessionId={}, member={}", mySessionId, loginMember);
+
+        return "loginhome";
     }
 
     @GetMapping("/save")
