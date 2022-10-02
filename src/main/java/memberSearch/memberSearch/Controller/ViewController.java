@@ -3,6 +3,7 @@ package memberSearch.memberSearch.Controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import memberSearch.memberSearch.domain.Member;
+import memberSearch.memberSearch.domain.MySession;
 import memberSearch.memberSearch.repository.MemberSearchCondition;
 import memberSearch.memberSearch.service.MemberService;
 import memberSearch.memberSearch.service.SessionService;
@@ -22,7 +23,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -120,12 +123,38 @@ public class ViewController {
             return "home";
         }
 
+        MySession newSession = new MySession(mySessionId, id, LocalDateTime.now());
+        sessionService.updateCreatedBy(newSession);
+
         model.addAttribute("loginmember", loginMember);
 
         log.info("mySessionId={}, member={}", mySessionId, loginMember);
 
         return "loginhome";
     }
+
+
+    @GetMapping("/loginSessionHome2")
+    public String loginSessionHome2(HttpServletRequest request, Model model){
+        List<String> links = new ArrayList<>();
+        links.add("/save");
+        links.add("/spec");
+        links.add("/find");
+        model.addAttribute("links", links);
+
+        HttpSession session = request.getSession(false);
+
+        if(session==null){
+            return "home";
+        }
+
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        model.addAttribute("loginmember", loginMember);
+
+        return "loginhome";
+    }
+
 
     @GetMapping("/save")
     public String save(Model model){

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,6 +47,12 @@ public class LoginController {
     public String loginSessionPage(Model model){
         model.addAttribute("loginFormDto", new LoginFormDto());
         return "loginSession";
+    }
+
+    @GetMapping("/session2")
+    public String loginSessionPage2(Model model){
+        model.addAttribute("loginFormDto", new LoginFormDto());
+        return "loginSessionV";
     }
 
     @PostMapping("/login")
@@ -94,5 +101,25 @@ public class LoginController {
         log.info("session cookie name={}, value={}", idCookie.getName(), idCookie.getValue());
 
         return "redirect:/loginSessionHome";
+    }
+
+    @PostMapping("/session2")
+    public String loginSession2(@ModelAttribute @Valid LoginFormDto loginFormDto, BindingResult bindingResult, HttpServletRequest request){
+        Member loginMember = null;
+        try {
+            loginMember = loginService.login(loginFormDto.getId(), loginFormDto.getPassword());
+        }catch (NoSuchElementException e){
+            bindingResult.reject("login", "login fail");
+        }
+
+        if(bindingResult.hasErrors()){
+            log.error("error={}", bindingResult);
+            return "loginSessionV";
+        }
+
+        HttpSession session = request.getSession();
+        session.setAttribute("loginMember", loginMember);
+
+        return "redirect:/loginSessionHome2";
     }
 }
