@@ -62,7 +62,8 @@ public class LoginController {
         try {
             loginMember = loginService.login(loginFormDto.getId(), loginFormDto.getPassword());
         }catch (NoSuchElementException e){
-            bindingResult.reject("login", "login fail");
+            throw e;
+//            bindingResult.reject("login", "login fail");
         }
 
         if(bindingResult.hasErrors()){
