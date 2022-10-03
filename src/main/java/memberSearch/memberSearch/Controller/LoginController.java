@@ -21,10 +21,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -79,6 +76,14 @@ public class LoginController {
         return "redirect:/loginhome";
     }
 
+    @PostMapping("/logout")
+    public String logout(HttpServletResponse response){
+        Cookie cookie = new Cookie("id", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
+    }
+
     @PostMapping("/session")
     public String loginSession(@ModelAttribute @Valid LoginFormDto loginFormDto, BindingResult bindingResult, HttpServletResponse response, Model model){
         Member loginMember = null;
@@ -107,6 +112,27 @@ public class LoginController {
         return "redirect:/loginSessionHome";
     }
 
+    @PostMapping("/sessionlogout")
+    public String sessionLogout(HttpServletRequest request, HttpServletResponse response){
+        Cookie[] cookies = request.getCookies();
+        log.info("sessionLogout cookies = {}", cookies);
+        Cookie cookie1 = Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals("mySessionId"))
+                .findAny()
+                .orElse(null);
+
+        log.info("sessionlogout cookie = {}", cookie1);
+        if(cookie1 == null)
+            return "redirect:/";
+
+        String mySessionId = cookie1.getValue();
+        sessionService.delete(mySessionId);
+        Cookie expiredCookie = new Cookie("mySessionId", null);
+        expiredCookie.setMaxAge(0);
+        response.addCookie(expiredCookie);
+        return "redirect:/";
+    }
+
     @PostMapping("/session2")
     public String loginSession2(@ModelAttribute @Valid LoginFormDto loginFormDto, BindingResult bindingResult, HttpServletRequest request){
         Member loginMember = null;
@@ -125,6 +151,17 @@ public class LoginController {
         session.setAttribute("loginMember", loginMember);
 
         return "redirect:/loginSessionHome2";
+    }
+
+    @PostMapping("/sessionlogout2")
+    public String sessionLogout2(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        log.info("session={}", session);
+        if(session == null)
+            return "redirect:/";
+
+        session.invalidate();
+        return "redirect:/";
     }
 
     @PostMapping("/session3")

@@ -18,6 +18,15 @@
         <div th:text="${loginmember.name}"></div>
     </div>
 </div>
+<form method="post" th:action="@{/logout}">
+    <button type="submit">logout</button>
+</form>
+<form method="post" th:action="@{/sessionlogout}">
+    <button type="submit">session logout</button>
+</form>
+<form method="post" th:action="@{/sessionlogout2}">
+    <button type="submit">session logout2</button>
+</form>
 <th:block th:each="url: ${links}">
     <div>
         <a th:text="${url}" th:href="${url}"></a>
