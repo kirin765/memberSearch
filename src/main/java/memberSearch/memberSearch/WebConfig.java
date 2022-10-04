@@ -10,11 +10,14 @@ import memberSearch.memberSearch.filter.LoginCheckFilter;
 import memberSearch.memberSearch.formatter.MyNumberFormatter;
 import memberSearch.memberSearch.interceptor.LogInterceptor;
 import memberSearch.memberSearch.interceptor.LoginInterceptor;
+import memberSearch.memberSearch.resolver.MyHandlerExceptionResolver;
+import memberSearch.memberSearch.resolver.UserHandlerExceptionResolver;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -69,5 +72,11 @@ public class WebConfig implements WebMvcConfigurer {
         filterFilterRegistrationBean.addUrlPatterns("/*");
 
         return filterFilterRegistrationBean;
+    }
+
+    @Override
+    public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+        resolvers.add(new MyHandlerExceptionResolver());
+        resolvers.add(new UserHandlerExceptionResolver());
     }
 }
