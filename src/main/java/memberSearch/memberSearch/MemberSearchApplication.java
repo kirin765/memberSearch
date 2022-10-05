@@ -17,7 +17,8 @@ public class MemberSearchApplication {
 
 	@Bean
 	public DataSource dataSource(){
-		return new DriverManagerDataSource(DBConnectionUtil.URL, DBConnectionUtil.USERNAME, DBConnectionUtil.PASSWORD);
+		return new
+				DriverManagerDataSource(DBConnectionUtil.URL, DBConnectionUtil.USERNAME, DBConnectionUtil.PASSWORD);
 	}
 
 }

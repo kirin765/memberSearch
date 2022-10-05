@@ -34,10 +34,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LogInterceptor())
-                .order(1)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/css/**", "/*.ico", "/error");
+//        registry.addInterceptor(new LogInterceptor())
+//                .order(1)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/css/**", "/*.ico", "/error");
 
 //        registry.addInterceptor(new LoginInterceptor())
 //                .order(2)
@@ -76,7 +76,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
-        resolvers.add(new MyHandlerExceptionResolver());
-        resolvers.add(new UserHandlerExceptionResolver());
+//        resolvers.add(new MyHandlerExceptionResolver());
+//        resolvers.add(new UserHandlerExceptionResolver());
     }
 }
