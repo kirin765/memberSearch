@@ -7,6 +7,7 @@ import memberSearch.memberSearch.domain.Item;
 import memberSearch.memberSearch.domain.ItemForm;
 import memberSearch.memberSearch.domain.UploadFile;
 import memberSearch.memberSearch.repository.ItemRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;

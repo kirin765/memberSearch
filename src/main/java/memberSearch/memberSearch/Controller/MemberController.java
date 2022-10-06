@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import memberSearch.memberSearch.domain.Member;
 import memberSearch.memberSearch.repository.MemberSearchCondition;
 import memberSearch.memberSearch.service.MemberService;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,14 @@ public class MemberController {
         memberService.saveMember(member);
         log.info("addMember: {}", member);
         return member;
+    }
+
+    @ResponseBody
+    @PostMapping("/test")
+    public String testHttpEntity(HttpEntity<Member> httpEntity){
+        Member member = httpEntity.getBody();
+        log.info("member={}", member);
+        return "ok";
     }
 
     @PutMapping("/{memberId}")
